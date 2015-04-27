@@ -7,7 +7,6 @@ var MembershipApplication = function(args) {
 
     this.validUntil = args.validUntil ? moment(args.validUntil) : moment().add(10, 'days');
 
-
     this.expired = function () {
         return this.validUntil.isBefore(moment());
     };

@@ -2,9 +2,11 @@ var Emitter = require('events').EventEmitter;
 var util = require('util');
 
 var ReviewProcess = function (args) {
+    var callback;
 
     //make sure the app is valid
     this.ensureAppValid = function (app) {
+
         if(app.isValid()){
             this.emit('validated', app);
         } else {
@@ -13,13 +15,12 @@ var ReviewProcess = function (args) {
         }
     };
 
-
     //find the next mission
     this.findNextMission = function (app) {
         app.mission = {
             commander:null,
             pilot:null,
-            MACPilot: null,
+            MAVPilot: null,
             passengers: []
         };
 
@@ -40,15 +41,37 @@ var ReviewProcess = function (args) {
     };
 
     //accept the app with a message
-
     this.acceptApplication = function (app) {
-        //what do we do?
+        callback(null, {
+            success: true,
+            message: 'Welcome to the Mars Program!'
+        });
     };
 
     //deny the app with a message
-    this.denyApplication = function(app) {
+    this.denyApplication = function(message) {
+        callback(null, {
+            success: false,
+            message: message
+        });
+    };
 
-    }
+    this.processApplication = function (app, next) {
+        callback = next;
+        this.emit('application-received', app);
+
+
+    };
+
+    //event path
+    this.on('application-received', this.ensureAppValid);
+    this.on('validated', this.findNextMission);
+    this.on('mission-selected', this.roleIsAvailable);
+    this.on('role-available', this.ensureRoleCompatible);
+    this.on('role-compatible', this.acceptApplication);
+
+    //sad path
+    this.on('invalid', this.denyApplication);
 };
 
 
