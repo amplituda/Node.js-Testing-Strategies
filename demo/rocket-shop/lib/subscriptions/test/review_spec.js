@@ -50,7 +50,7 @@ describe('The Review Process', function () {
         it('ensures the application is valid', function () {
             assert(validationSpy.called);
         });
-        it('select a mission', function () {
+        it('selects a mission', function () {
             assert(roleAvailableSpy.called);
         });
         it('ensures a role exists', function () {
