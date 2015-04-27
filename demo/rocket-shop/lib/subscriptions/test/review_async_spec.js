@@ -1,5 +1,5 @@
 var assert                = require('assert');
-var ReviewProcess         = require('../processes/review');
+var ReviewProcess         = require('../processes/review_async');
 var MembershipApplication = require('../models/membership_application');
 
 var sinon = require('sinon');
