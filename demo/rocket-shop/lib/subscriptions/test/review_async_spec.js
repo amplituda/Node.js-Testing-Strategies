@@ -1,12 +1,10 @@
-var assert                = require('assert');
-var ReviewProcess         = require('../processes/review_async');
-var MembershipApplication = require('../models/membership_application');
+var assert                  = require('assert');
+var ReviewProcess           = require('../processes/review_async');
+var MembershipApplication   = require('../models/membership_application');
+var sinon                   = require('sinon');
 
-var sinon = require('sinon');
 
-
-describe('The Review Process', function () {
-
+describe('The Review Process async', function () {
     describe('Receiving a valid application', function () {
         var decision;
         var validApp = new MembershipApplication({
@@ -17,12 +15,14 @@ describe('The Review Process', function () {
             height: 66,
             weight: 180
         });
-        var review = new ReviewProcess();
-
+        var review = new ReviewProcess({application: validApp});
+        sinon.spy(review, 'ensureAppValid');
+        sinon.spy(review, 'findNextMission');
+        sinon.spy(review, 'roleIsAvailable');
+        sinon.spy(review, 'ensureRoleCompatible');
 
         before(function (done) {
-
-            review.processApplication(validApp, function (err, result) {
+            review.processApplication(function (err, result) {
                 decision = result;
                 done();
             });
@@ -32,18 +32,17 @@ describe('The Review Process', function () {
             assert(decision.success, decision.message);
         });
 
-
-        it.skip('ensures the application is valid', function () {
-            assert(validationSpy.called);
+        it('ensures the application is valid', function () {
+            assert(review.ensureAppValid.called);
         });
-        it.skip('selects a mission', function () {
-            assert(roleAvailableSpy.called);
+        it('selects a mission', function () {
+            assert(review.findNextMission.called);
         });
-        it.skip('ensures a role exists', function () {
-            assert(roleAvailableSpy.called);
+        it('ensures a role exists', function () {
+            assert(review.roleIsAvailable.called);
         });
-        it.skip('ensures role compatibility', function () {
-            assert(roleCompatibleSpy.called);
+        it('ensures role compatibility', function () {
+            assert(review.ensureRoleCompatible.called);
         });
     });
 });

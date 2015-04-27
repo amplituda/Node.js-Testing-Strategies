@@ -5,7 +5,7 @@ var MembershipApplication = require('../models/membership_application');
 var sinon = require('sinon');
 
 
-describe('The Review Process', function () {
+describe('The Review Process emit', function () {
 
     describe('Receiving a valid application', function () {
         var decision;

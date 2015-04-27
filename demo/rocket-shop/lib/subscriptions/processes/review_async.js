@@ -3,8 +3,7 @@ var assert  = require('assert');
 
 var ReviewProcess = function (args) {
     assert(args.application, 'Need an application to review');
-    var app = args.app;
-
+    var app = args.application;
 
     //make sure the app is valid
     this.ensureAppValid = function (next) {
