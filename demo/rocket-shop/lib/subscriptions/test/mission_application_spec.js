@@ -5,3 +5,4 @@ describe('New user signup', function () {
         it('let\'s them in');
     });
 });
+
