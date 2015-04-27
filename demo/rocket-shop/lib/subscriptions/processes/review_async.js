@@ -8,7 +8,7 @@ var ReviewProcess = function (args) {
     //make sure the app is valid
     this.ensureAppValid = function (next) {
         if(app.isValid()){
-            next(null, app);
+            next(null, true);
         } else {
             next(app.validationMessage(), null);
         }
@@ -16,45 +16,49 @@ var ReviewProcess = function (args) {
 
     //find the next mission
     this.findNextMission = function (next) {
-        app.mission = {
+        var mission = {
             commander:null,
             pilot:null,
             MAVPilot: null,
             passengers: []
         };
-        next(null, app);
+        next(null, mission);
     };
 
     //make sure role selected is available
     this.roleIsAvailable = function (next) {
         //we have no concept of role selection just yet
         //TODO: What about a role? Need more info
-        next(null, app);
+        next(null, true);
     };
 
     //make sure height/weight/age is right for role
     this.ensureRoleCompatible = function (next) {
      //TODO: find out about roles and height/weight
-        next(null, app);
+        next(null, true);
+    };
+
+    this.approveApplication = function (next) {
+        next(null, true);
     };
 
     this.processApplication = function (next) {
-        async.series([
-            this.ensureAppValid,
-            this.findNextMission,
-            this.roleIsAvailable,
-            this.ensureRoleCompatible
-        ], function (err,result) {
+        async.series({
+            validated : this.ensureAppValid,
+            mission : this.findNextMission,
+            roleAvailable : this.roleIsAvailable,
+            roleCompatible : this.ensureRoleCompatible,
+            success : this.approveApplication
+        }, function (err, result) {
             if(err) {
               next(null, {
                   success: false,
                   message: err
               });
             } else {
-                next(null, {
-                    success: true,
-                    message: 'Welcome to Mars!'
-                });
+                result.message = 'Welcome to Mars';
+
+                next(null, result);
             }
         });
     };
