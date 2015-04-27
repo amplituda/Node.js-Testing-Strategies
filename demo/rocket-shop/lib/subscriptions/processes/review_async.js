@@ -1,5 +1,3 @@
-var Emitter = require('events').EventEmitter;
-var util    = require('util');
 var async   = require('async');
 var assert  = require('assert');
 
