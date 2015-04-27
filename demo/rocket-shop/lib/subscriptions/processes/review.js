@@ -59,8 +59,6 @@ var ReviewProcess = function (args) {
     this.processApplication = function (app, next) {
         callback = next;
         this.emit('application-received', app);
-
-
     };
 
     //event path
@@ -73,7 +71,6 @@ var ReviewProcess = function (args) {
     //sad path
     this.on('invalid', this.denyApplication);
 };
-
 
 util.inherits(ReviewProcess, Emitter);
 module.exports = ReviewProcess;
