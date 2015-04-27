@@ -1,6 +1,6 @@
 var assert = require('assert');
 var MembershipApplication = require('../models/membership_application');
-
+var moment = require('moment');
 
 describe('Membership application requirements', function () {
     var validApp;
@@ -37,6 +37,11 @@ describe('Membership application requirements', function () {
         });
     });
     describe('Application invalid if...', function () {
+        it('is past the validUntil date', function () {
+            var app = new MembershipApplication({validUntil: Date.parse('01/01/2010')});
+            assert(app.expired());
+        });
+
         it('email is 4 characters or less', function () {
            var app = new MembershipApplication({email: 'dd'});
             assert(!app.emailIsValid());
